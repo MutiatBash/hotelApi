@@ -1,4 +1,6 @@
 const { Schema, model } = require("mongoose");
+const mongoose = require("mongoose");
+const RoomType = require("./room-types.model")
 
 const Room = new Schema(
 	{
@@ -8,7 +10,8 @@ const Room = new Schema(
 			maxlength: 50,
 		},
 		roomType: {
-			type: String,
+			type: mongoose.Schema.Types.ObjectId,
+            ref:'RoomType',
 			required: true,
 		},
 		price: {
