@@ -26,6 +26,36 @@ router.get("/room-types", async (req, res) => {
 	}
 });
 
+//Get all room with filters
+router.get("/rooms", async (req, res) => {
+	try {
+		let query = {};
+		if (req.query.search) {
+			query.name = { $regex: req.query.search, $options: "i" };
+		}
+		if (req.query.roomType) {
+			query.roomType = req.query.roomType;
+		}
+		if (req.query.minPrice || req.query.maxPrice) {
+			query.price = {};
+			if (req.query.minPrice) {
+				query.price.$gte = parseInt(req.query.minPrice);
+			} else {
+				query.price.$gte = 0;
+			}
+			if (req.query.maxPrice) {
+				query.price.$lte = parseInt(req.query.maxPrice);
+			}
+		}
+
+		const rooms = await RoomModel.find(query);
+		res.json(rooms);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: error.message });
+	}
+});
+
 //Create rooms
 router.post("/rooms", async (req, res) => {
 	 const data = new RoomModel({
@@ -72,7 +102,7 @@ router.delete("/rooms/:id", async (req, res) => {
 	try {
 		const id = req.params.id;
 		const data = await RoomModel.findByIdAndDelete(id);
-		res.send(`Room with name : ${data.name} has been deleted..`);
+		res.send(`Room with name : ${data.name} has been deleted`);
 	} catch (error) {
 		res.status(400).json({ message: error.message });
 	}
