@@ -1,11 +1,12 @@
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-const Joi = require("joi");
+import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import Joi from "joi";
 
-const User = require("../models/user.model"); 
+import User from "../models/user.model";
 
 // Validation middleware using Joi
-function validateUser(req, res, next) {
+function validateUser(req: Request, res: Response, next: NextFunction) {
 	const schema = Joi.object({
 		username: Joi.string().required(),
 		password: Joi.string().required(),
@@ -17,7 +18,7 @@ function validateUser(req, res, next) {
 }
 
 // Authentication middleware using JWT
-function authenticateUser(req, res, next) {
+function authenticateUser(req: Request, res: Response, next: NextFunction) {
 	const token = req.header("Authorization");
 	if (!token)
 		return res
@@ -34,7 +35,7 @@ function authenticateUser(req, res, next) {
 }
 
 // Authorization middleware for admin role
-function authorizeAdmin(req, res, next) {
+function authorizeAdmin(req: Request, res: Response, next: NextFunction) {
 	if (req.user.role !== "admin") {
 		return res
 			.status(403)
@@ -42,5 +43,4 @@ function authorizeAdmin(req, res, next) {
 	}
 	next();
 }
-
-module.exports = { validateUser, authenticateUser, authorizeAdmin };
+export default { validateUser, authenticateUser, authorizeAdmin };
