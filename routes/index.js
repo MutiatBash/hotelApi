@@ -11,8 +11,9 @@ const {
 	validateUser,
 	authenticateUser,
 	authorizeAdmin,
-} = require("./middlewares/middleware");
-const User = require("./models/user.model");
+} = require("../middlewares/middleware");
+
+const User = require("../models/user.model");
 
 //Create room type
 router.post("/room-types", async (req, res) => {
