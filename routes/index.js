@@ -1,8 +1,18 @@
 const express = require("express");
 const router = express.Router();
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const Joi = require("joi");
 
 const RoomTypeModel = require("../models/room-types.model");
 const RoomModel = require("../models/rooms.model");
+
+const {
+	validateUser,
+	authenticateUser,
+	authorizeAdmin,
+} = require("./middlewares/middleware");
+const User = require("./models/user.model");
 
 //Create room type
 router.post("/room-types", async (req, res) => {
@@ -57,12 +67,12 @@ router.get("/rooms", async (req, res) => {
 });
 
 //Create rooms
-router.post("/rooms", async (req, res) => {
-	 const data = new RoomModel({
-			name: req.body.name,
-			roomType: req.body.roomType,
-			price: req.body.price,
-		});
+router.post("/rooms", authenticateUser, async (req, res) => {
+	const data = new RoomModel({
+		name: req.body.name,
+		roomType: req.body.roomType,
+		price: req.body.price,
+	});
 
 	try {
 		const addRoom = await data.save();
@@ -83,13 +93,17 @@ router.get("/rooms/:id", async (req, res) => {
 });
 
 //Update room by ID Method
-router.patch("/rooms/:id", async (req, res) => {
+router.patch("/rooms/:id", authenticateUser, async (req, res) => {
 	try {
 		const id = req.params.id;
 		const updatedData = req.body;
 		const options = { new: true };
 
-		const result = await RoomModel.findByIdAndUpdate(id, updatedData, options);
+		const result = await RoomModel.findByIdAndUpdate(
+			id,
+			updatedData,
+			options
+		);
 
 		res.send(result);
 	} catch (error) {
@@ -98,7 +112,7 @@ router.patch("/rooms/:id", async (req, res) => {
 });
 
 //Delete by ID Method
-router.delete("/rooms/:id", async (req, res) => {
+router.delete("/rooms/:id", authenticateUser, authorizeAdmin, async (req, res) => {
 	try {
 		const id = req.params.id;
 		const data = await RoomModel.findByIdAndDelete(id);
@@ -107,5 +121,42 @@ router.delete("/rooms/:id", async (req, res) => {
 		res.status(400).json({ message: error.message });
 	}
 });
+
+// // register user
+// router.post("/register", validateUser, async (req, res) => {
+// 	try {
+// 		const { username, password, role } = req.body;
+// 		const existingUser = await User.findOne({ username });
+// 		if (existingUser)
+// 			return res.status(400).json({ message: "User already exists." });
+// 		const user = new User({ username, password, role });
+// 		await user.save();
+// 		res.status(201).json({ message: "User registered successfully." });
+// 	} catch (error) {
+// 		console.error(error);
+// 		res.status(500).json({ message: "Server error." });
+// 	}
+// });
+
+// // Login user route
+// router.post("/login", async (req, res) => {
+// 	try {
+// 		const { username, password } = req.body;
+// 		const user = await User.findOne({ username });
+// 		if (!user)
+// 			return res.status(400).json({ message: "Invalid credentials." });
+// 		const isMatch = await bcrypt.compare(password, user.password);
+// 		if (!isMatch)
+// 			return res.status(400).json({ message: "Invalid credentials." });
+// 		const token = jwt.sign(
+// 			{ user: { id: user.id, role: user.role } },
+// 			"your_secret_key"
+// 		);
+// 		res.json({ token });
+// 	} catch (error) {
+// 		console.error(error);
+// 		res.status(500).json({ message: "Server error." });
+// 	}
+// });
 
 module.exports = router;
