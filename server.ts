@@ -1,12 +1,10 @@
 // importing packages
-const express = require("express");
-const cors = require("cors");
+import express from "express";
+import cors from "cors";
 import connectDB from "./database";
 import route from "./routes/index";
 
 require("dotenv").config();
-
-
 
 // initializing express
 const app = express();
