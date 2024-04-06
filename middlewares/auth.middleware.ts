@@ -6,7 +6,7 @@ import Joi from "joi";
 import User from "../models/user.model";
 
 // Validation middleware using Joi
-function validateUser(req: Request, res: Response, next: NextFunction) {
+export function validateUser(req: Request, res: Response, next: NextFunction) {
 	const schema = Joi.object({
 		username: Joi.string().required(),
 		password: Joi.string().required(),
@@ -18,7 +18,7 @@ function validateUser(req: Request, res: Response, next: NextFunction) {
 }
 
 // Authentication middleware using JWT
-function authenticateUser(req: Request, res: Response, next: NextFunction) {
+export function authenticateUser(req: Request, res: Response, next: NextFunction) {
 	const token = req.header("Authorization");
 	if (!token)
 		return res
@@ -27,7 +27,7 @@ function authenticateUser(req: Request, res: Response, next: NextFunction) {
 
 	try {
 		const decoded = jwt.verify(token, "your_secret_key");
-		req.user = decoded.user;
+		req.body = decoded;
 		next();
 	} catch (error) {
 		res.status(401).json({ message: "Invalid token." });
@@ -35,12 +35,13 @@ function authenticateUser(req: Request, res: Response, next: NextFunction) {
 }
 
 // Authorization middleware for admin role
-function authorizeAdmin(req: Request, res: Response, next: NextFunction) {
-	if (req.user.role !== "admin") {
+export function authorizeAdmin(req: Request, res: Response, next: NextFunction) {
+	if (req.body.role !== "admin") {
 		return res
 			.status(403)
 			.json({ message: "Forbidden. Admin access required." });
 	}
 	next();
 }
-export default { validateUser, authenticateUser, authorizeAdmin };
+
+// export default { validateUser, authenticateUser, authorizeAdmin };

@@ -1,8 +1,6 @@
 import express from "express";
+import {Request, Response} from "express";
 const router = express.Router();
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const Joi = require("joi");
 
 import RoomTypeModel from "../models/room-types.model";
 import RoomModel from "../models/rooms.model";
@@ -12,7 +10,7 @@ import {
 	validateUser,
 	authenticateUser,
 	authorizeAdmin,
-} from "../middlewares/middleware";
+} from "../middlewares/auth.middleware";
 
 //Create room type
 router.post("/room-types", async (req: Request, res: Response) => {
@@ -21,7 +19,7 @@ router.post("/room-types", async (req: Request, res: Response) => {
 	try {
 		const addData = await RoomTypeModel.create({ name });
 		res.status(200).json(addData);
-	} catch (error) {
+	} catch (error:any) {
 		res.status(400).json({ message: error.message });
 	}
 });
@@ -31,40 +29,40 @@ router.get("/room-types", async (req: Request, res: Response) => {
 	try {
 		const data = await RoomTypeModel.find();
 		res.json(data);
-	} catch (error) {
+	} catch (error:any) {
 		res.status(500).json({ message: error.message });
 	}
 });
 
 //Get all room with filters
-router.get("/rooms", async (req: Request, res: Response) => {
-	try {
-		let query = {};
-		if (req.query.search) {
-			query.name = { $regex: req.query.search, $options: "i" };
-		}
-		if (req.query.roomType) {
-			query.roomType = req.query.roomType;
-		}
-		if (req.query.minPrice || req.query.maxPrice) {
-			query.price = {};
-			if (req.query.minPrice) {
-				query.price.$gte = parseInt(req.query.minPrice);
-			} else {
-				query.price.$gte = 0;
-			}
-			if (req.query.maxPrice) {
-				query.price.$lte = parseInt(req.query.maxPrice);
-			}
-		}
+// router.get("/rooms", async (req: Request, res: Response) => {
+// 	try {
+// 		let query = {};
+// 		if (req.query.search) {
+// 			query.name = { $regex: req.query.search, $options: "i" };
+// 		}
+// 		if (req.query.roomType) {
+// 			query.roomType = req.query.roomType;
+// 		}
+// 		if (req.query.minPrice || req.query.maxPrice) {
+// 			query.price = {};
+// 			if (req.query.minPrice) {
+// 				query.price.$gte = parseInt(req.query.minPrice);
+// 			} else {
+// 				query.price.$gte = 0;
+// 			}
+// 			if (req.query.maxPrice) {
+// 				query.price.$lte = parseInt(req.query.maxPrice);
+// 			}
+// 		}
 
-		const rooms = await RoomModel.find(query);
-		res.json(rooms);
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({ message: error.message });
-	}
-});
+// 		const rooms = await RoomModel.find(query);
+// 		res.json(rooms);
+// 	} catch (error) {
+// 		console.error(error);
+// 		res.status(500).json({ message: error.message });
+// 	}
+// });
 
 //Create rooms
 router.post("/rooms", authenticateUser, RoomController.createRoom);
@@ -78,6 +76,6 @@ router.patch("/rooms/:id", authenticateUser, RoomController.updateRoom);
 //Delete by ID Method
 router.delete("/rooms/:id", authenticateUser, authorizeAdmin, RoomController.deleteRoom);
 
-router.get("/", RoomController.findAllRooms);
+router.get("/rooms", RoomController.findAllRooms);
 
 export default router;

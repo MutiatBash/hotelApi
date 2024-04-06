@@ -45,19 +45,16 @@ class RoomController {
 			});
 		}
 
-		// check for uniqueness
+		// check for uniqueness and fetching existing room with the name to update
 		if (updateRoom.name) {
-			const existingRoomWithUpdateName = await RoomService.findRoom({
-				name: updateRoom.toLowerCase(),
+			const existingRoomName:any = await RoomService.findRoom({
+				name: updateRoom.name.toLowerCase(),
 			});
 
-			if (
-				existingRoomWithUpdateName._id.toString() !==
-				existingRoom._id.toString()
-			) {
+			if (existingRoomName._id.toString() !== roomId) {
 				res.status(403).json({
 					success: false,
-					message: "Room with update name already exists",
+					message: "Room with that name already exists",
 				});
 			}
 		}

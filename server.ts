@@ -1,8 +1,8 @@
 // importing packages
 const express = require("express");
 const cors = require("cors");
-const connectDB = require("./database");
-const route = require("./routes");
+import connectDB from "./database";
+import roomRouter from "./routes/index";
 
 require("dotenv").config();
 
@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 connectDB();
 
 // using the route
-app.use("/api/v1", route);
+app.use("/api/v1", roomRouter);
 
 const port = process.env.PORT || 3001;
 
