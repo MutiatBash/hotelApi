@@ -65,7 +65,7 @@ router.get("/room-types", async (req: Request, res: Response) => {
 // });
 
 //Create rooms
-router.post("/rooms", authenticateUser, RoomController.createRoom);
+router.post("/rooms", RoomController.createRoom);
 
 //Get room by ID Method
 router.get("/rooms/:id", RoomController.findARoom);

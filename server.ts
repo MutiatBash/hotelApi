@@ -2,7 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 import connectDB from "./database";
-import roomRouter from "./routes/index";
+import route from "./routes/index";
 
 require("dotenv").config();
 
@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 connectDB();
 
 // using the route
-app.use("/api/v1", roomRouter);
+app.use("/api/v1", route);
 
 const port = process.env.PORT || 3001;
 

@@ -7,7 +7,6 @@ const Room = new Schema(
 		name: {
 			type: String,
 			required: true,
-			maxlength: 50,
 		},
 		roomType: {
 			type: mongoose.Schema.Types.ObjectId,
