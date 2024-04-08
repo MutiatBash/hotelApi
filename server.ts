@@ -2,7 +2,8 @@
 import express from "express";
 import cors from "cors";
 import connectDB from "./database";
-import route from "./routes/index";
+import route from "./routes/rooms.route";
+import authRoute from "./routes/auth.route";
 
 require("dotenv").config();
 
@@ -16,11 +17,15 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// initializing Database
-connectDB();
 
 // using the route
 app.use("/api/v1", route);
+app.use("/api/v1", authRoute);
+
+
+
+// initializing Database
+connectDB();
 
 const port = process.env.PORT || 3001;
 

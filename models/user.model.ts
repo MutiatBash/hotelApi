@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose";
 import mongoose from "mongoose";
-import bcryptjs from "bcryptjs";
+import bcrypt from "bcryptjs";
+import { required } from "joi";
 
 const User = new Schema(
 	{
@@ -16,7 +17,8 @@ const User = new Schema(
 		role: {
 			type: String,
 			enum: ["guest", "admin"],
-			default: "guest",
+			// default: "guest",
+			required: true,
 		},
 	},
 	{ timestamps: true }
@@ -26,8 +28,8 @@ const User = new Schema(
 User.pre("save", async function (next) {
 	const user = this;
 	if (!user.isModified("password")) return next();
-	const salt = await bcryptjs.genSalt(10);
-	user.password = await bcryptjs.hash(user.password, salt);
+	const salt = await bcrypt.genSalt(10);
+	user.password = await bcrypt.hash(user.password, salt);
 	next();
 });
 

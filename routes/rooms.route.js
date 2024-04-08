@@ -14,10 +14,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
-const room_types_model_1 = __importDefault(require("../models/room-types.model"));
 const rooms_controllers_1 = __importDefault(require("../controllers/rooms.controllers"));
+const room_types_model_1 = __importDefault(require("../models/room-types.model"));
 const auth_middleware_1 = require("../middlewares/auth.middleware");
-//Create room type
+// Create room type
 router.post("/room-types", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name } = req.body;
     try {
@@ -28,7 +28,7 @@ router.post("/room-types", (req, res) => __awaiter(void 0, void 0, void 0, funct
         res.status(400).json({ message: error.message });
     }
 }));
-//Get all room types
+// Get all room types
 router.get("/room-types", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield room_types_model_1.default.find();
@@ -38,7 +38,20 @@ router.get("/room-types", (req, res) => __awaiter(void 0, void 0, void 0, functi
         res.status(500).json({ message: error.message });
     }
 }));
-//Get all room with filters
+//Create rooms
+// router.get("/test", (req, res) => {
+// 	res.send("Test route works");
+// });
+router.post("/", auth_middleware_1.authenticateUser, rooms_controllers_1.default.createRoom);
+// Get All rooms
+router.get("/", rooms_controllers_1.default.findAllRooms);
+//Get room by ID Method
+router.get("/:id", rooms_controllers_1.default.findARoom);
+//Update room by ID Method
+router.patch("/:id", rooms_controllers_1.default.updateRoom);
+//Delete by ID Method
+router.delete("/:id", rooms_controllers_1.default.deleteRoom);
+// Get all room with filters
 // router.get("/rooms", async (req: Request, res: Response) => {
 // 	try {
 // 		let query = {};
@@ -66,13 +79,4 @@ router.get("/room-types", (req, res) => __awaiter(void 0, void 0, void 0, functi
 // 		res.status(500).json({ message: error.message });
 // 	}
 // });
-//Create rooms
-router.post("/rooms", rooms_controllers_1.default.createRoom);
-//Get room by ID Method
-router.get("/rooms/:id", rooms_controllers_1.default.findARoom);
-//Update room by ID Method
-router.patch("/rooms/:id", auth_middleware_1.authenticateUser, rooms_controllers_1.default.updateRoom);
-//Delete by ID Method
-router.delete("/rooms/:id", auth_middleware_1.authenticateUser, auth_middleware_1.authorizeAdmin, rooms_controllers_1.default.deleteRoom);
-router.get("/rooms", rooms_controllers_1.default.findAllRooms);
 exports.default = router;

@@ -13,6 +13,7 @@ const Room = new mongoose_1.Schema({
     },
     roomType: {
         type: mongoose_2.default.Schema.Types.ObjectId,
+        // type:String,
         ref: 'RoomType',
         required: true,
     },

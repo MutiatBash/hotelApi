@@ -27,7 +27,8 @@ const User = new mongoose_1.Schema({
     role: {
         type: String,
         enum: ["guest", "admin"],
-        default: "guest",
+        // default: "guest",
+        required: true,
     },
 }, { timestamps: true });
 // Hash password before saving

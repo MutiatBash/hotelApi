@@ -1,12 +1,11 @@
-
 import RoomModel from "../models/rooms.model";
-import Room from "../interfaces/room.interface";
+import {Room} from "../interfaces/room.interface";
 import { FilterQuery, UpdateQuery } from "mongoose";
 
 class RoomService {
 	// create a room
-	async create(room: Room) {
-		return await RoomModel.create(room);
+	async create(data: Room) {
+		return await RoomModel.create(data);
 	}
 
 	// update a room

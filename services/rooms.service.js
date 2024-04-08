@@ -15,9 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const rooms_model_1 = __importDefault(require("../models/rooms.model"));
 class RoomService {
     // create a room
-    create(room) {
+    create(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield rooms_model_1.default.create(room);
+            return yield rooms_model_1.default.create(data);
         });
     }
     // update a room

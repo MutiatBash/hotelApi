@@ -10,6 +10,7 @@ const Room = new Schema(
 		},
 		roomType: {
 			type: mongoose.Schema.Types.ObjectId,
+			// type:String,
             ref:'RoomType',
 			required: true,
 		},
@@ -21,6 +22,6 @@ const Room = new Schema(
 	{ timestamps: true }
 );
 
-const RoomModel = model("rooms", Room);
+const RoomModel = model("rooms", Room); 
 
 export default RoomModel;
