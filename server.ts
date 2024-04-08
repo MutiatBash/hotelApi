@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 
 
 // using the route
-app.use("/api/v1", route);
+app.use("/api/v1/rooms", route);
 app.use("/api/v1", authRoute);
 
 

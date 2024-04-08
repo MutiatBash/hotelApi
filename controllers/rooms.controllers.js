@@ -57,7 +57,7 @@ class RoomController {
                 const existingRoomName = yield rooms_service_1.default.findRoom({
                     name: updateRoom.name.toLowerCase(),
                 });
-                if (existingRoomName._id.toString() !== roomId) {
+                if ((existingRoomName === null || existingRoomName === void 0 ? void 0 : existingRoomName._id.toString()) !== roomId) {
                     res.status(403).json({
                         success: false,
                         message: "Room with that name already exists",

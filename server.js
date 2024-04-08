@@ -18,7 +18,7 @@ app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 // using the route
-app.use("/api/v1", rooms_route_1.default);
+app.use("/api/v1/rooms", rooms_route_1.default);
 app.use("/api/v1", auth_route_1.default);
 // initializing Database
 (0, database_1.default)();

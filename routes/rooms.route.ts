@@ -2,10 +2,7 @@ import express from "express";
 import { Request, Response } from "express";
 const router = express.Router();
 import RoomController from "../controllers/rooms.controllers";
-
 import RoomTypeModel from "../models/room-types.model";
-import RoomModel from "../models/rooms.model";
-
 import { authenticateUser } from "../middlewares/auth.middleware";
 import User from "../models/user.model";
 
@@ -38,7 +35,7 @@ router.get("/room-types", async (req: Request, res: Response) => {
 // 	res.send("Test route works");
 // });
 
-router.post("/", authenticateUser, RoomController.createRoom);
+router.post("/", RoomController.createRoom);
 
 // Get All rooms
 router.get("/", RoomController.findAllRooms);

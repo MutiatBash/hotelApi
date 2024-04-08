@@ -22,7 +22,7 @@ function validateUser(req, res, next) {
     const schema = joi_1.default.object({
         username: joi_1.default.string().required(),
         password: joi_1.default.string().min(6).required(),
-        role: joi_1.default.string().valid("guest", "admin"),
+        role: joi_1.default.string().valid("guest", "admin").required(),
     });
     const { error } = schema.validate(req.body);
     if (error) {
@@ -33,15 +33,19 @@ function validateUser(req, res, next) {
 exports.validateUser = validateUser;
 function authenticateUser(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { username, password } = req.body;
+        const { username, password, role } = req.body;
         try {
+            console.log("Username:", username); // Log username
+            console.log("Password to check:", password); // Log password for comparison
             const user = yield user_model_1.default.findOne({ username });
+            console.log("Retrieved User:", user);
             if (!user) {
-                return res.status(401).json({ message: "Invalid credentials." });
+                return res.status(401).json({ message: "User not found" });
             }
             const isMatch = yield bcryptjs_1.default.compare(password, user.password);
+            console.log("Password:", isMatch);
             if (!isMatch) {
-                return res.status(401).json({ message: "Invalid credentials." });
+                return res.status(401).json({ message: "Password incorrect" });
             }
             const token = jsonwebtoken_1.default.sign({ userId: user._id, username: user.username, role: user.role }, "your_secret_key", { expiresIn: "1h" });
             console.log(token);

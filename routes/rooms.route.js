@@ -16,7 +16,6 @@ const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const rooms_controllers_1 = __importDefault(require("../controllers/rooms.controllers"));
 const room_types_model_1 = __importDefault(require("../models/room-types.model"));
-const auth_middleware_1 = require("../middlewares/auth.middleware");
 // Create room type
 router.post("/room-types", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name } = req.body;
@@ -42,7 +41,7 @@ router.get("/room-types", (req, res) => __awaiter(void 0, void 0, void 0, functi
 // router.get("/test", (req, res) => {
 // 	res.send("Test route works");
 // });
-router.post("/", auth_middleware_1.authenticateUser, rooms_controllers_1.default.createRoom);
+router.post("/", rooms_controllers_1.default.createRoom);
 // Get All rooms
 router.get("/", rooms_controllers_1.default.findAllRooms);
 //Get room by ID Method

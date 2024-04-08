@@ -51,7 +51,7 @@ class RoomController {
 				name: updateRoom.name.toLowerCase(),
 			});
 
-			if (existingRoomName._id.toString() !== roomId) {
+			if (existingRoomName?._id.toString() !== roomId) {
 				res.status(403).json({
 					success: false,
 					message: "Room with that name already exists",
