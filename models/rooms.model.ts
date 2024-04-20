@@ -1,6 +1,6 @@
 import  { Schema, model } from "mongoose";
 import mongoose from "mongoose";
-// import RoomType from "../models/room-types.model";
+import RoomType from "../models/room-types.model";
 
 const Room = new Schema(
 	{
@@ -10,8 +10,7 @@ const Room = new Schema(
 		},
 		roomType: {
 			type: mongoose.Schema.Types.ObjectId,
-			// type:String,
-            ref:'RoomType',
+            ref:RoomType,
 			required: true,
 		},
 		price: {
